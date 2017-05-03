@@ -1,2 +1,4 @@
-# dueling-rock-paper-scissors
-Dueling Rock Paper Scissors
+# Dueling Rock Paper Scissors
+
+
+Play the game [here](https://mathfour.github.io/dueling-rock-paper-scissors/)

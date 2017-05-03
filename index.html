@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta property="og:url"
-          content="URL_OF_THE_SITE"/>
+          content="https://mathfour.github.io/dueling-rock-paper-scissors/"/>
     <meta property="og:type"
           content="application"/>
     <meta property="og:title"
-          content="TITLE_OF_THE_PROGRAM"/>
+          content="Dueling Rock Paper Scissors"/>
     <meta property="og:description"
           content="Homework submission by Bon Crowder to The Houston Coding Bootcamp Powered by UT Austin"/>
-    <meta property="og:image"
-          content="../assets/images/IMAGE_FILE_NAME.png"/>
+    <!--<meta property="og:image"-->
+          <!--content="../assets/images/IMAGE_FILE_NAME.png"/>-->
     <link rel="icon"
           type="image/png"
-          href="images/BonCrowderFaviconWhiteBackground.png">
-     https://github.com/mathfour/GifTastic/blob/master/images/BonCrowderFaviconWhiteBackground.png
+          href="assets/images/BonCrowderFaviconWhiteBackground.png">
+    <link rel=icon href="https://github.com/mathfour/GifTastic/blob/master/images/BonCrowderFaviconWhiteBackground.png">
     <link rel="stylesheet"
           type="text/css"
-          href="assets/css/NAME_OF_PROJECT.css">
+          href="assets/css/dueling-rps.css">
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
@@ -31,9 +31,24 @@
 </head>
 <body>
 
-Rock Paper Scissors
+<h1>Rock Paper Scissors</h1>
+
+<input type="text"
+       id="userName" class="name-input">
+<br>
+<button id="play" class="name-input">Play</button>
+
+<div id="start-play">Hi there, <span id="greeting"></span>!
+    <br>
+    Choose Rock, Paper or Scissors...
+    <br>
+    <button class="choice" id="rock-choice">Rock</button>
+    <button class="choice" id="paper-choice">Paper</button>
+    <button class="choice" id="scissors-choice">Scissors</button>
+</div>
 
 
 
+<script src="assets/javascript/dueling-rps.js"></script>
 </body>
 </html>
