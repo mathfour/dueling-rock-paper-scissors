@@ -11,11 +11,12 @@
     <meta property="og:description"
           content="Homework submission by Bon Crowder to The Houston Coding Bootcamp Powered by UT Austin"/>
     <!--<meta property="og:image"-->
-          <!--content="../assets/images/IMAGE_FILE_NAME.png"/>-->
+    <!--content="../assets/images/IMAGE_FILE_NAME.png"/>-->
     <link rel="icon"
           type="image/png"
           href="assets/images/BonCrowderFaviconWhiteBackground.png">
-    <link rel=icon href="https://github.com/mathfour/GifTastic/blob/master/images/BonCrowderFaviconWhiteBackground.png">
+    <link rel=icon
+          href="https://github.com/mathfour/GifTastic/blob/master/images/BonCrowderFaviconWhiteBackground.png">
     <link rel="stylesheet"
           type="text/css"
           href="assets/css/dueling-rps.css">
@@ -29,51 +30,53 @@
     <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
     <title>Title</title>
 </head>
-<body onunload="deleteUser();" onbeforeunload="deleteUser();" >
+<body onunload="deleteUser();"
+      onbeforeunload="deleteUser();">
 
 <h1>Rock Paper Scissors</h1>
 
 <input type="text"
-       id="userName" class="name-input">
+       id="userNameInput"
+       class="name-input">
 <br>
-<button id="play" class="name-input">Play</button>
+<button id="play"
+        class="name-input">Play
+</button>
 
 <div id="greeting"></div>
 <div id="you-are-player"></div>
+<div id="player-x-turn"></div>
 
 <div id="theGame">
     Choose Rock, Paper or Scissors...
     <br>
-    <!--<input type="radio" name="choice" value="rock">Rock <br>-->
-    <!--<input type="radio" name="choice" value="rock">Rock <br>-->
-    <!--<input type="radio" name="choice" value="rock">Rock <br>-->
-
     <span>
-<input id="rock-choice" name="choices" type="radio" value="2">
-<label for="rock-choice">Rock</label>
-</span>
+        <input id="rock-choice"
+               name="choices"
+               type="radio"
+               value="2">
+        <label for="rock-choice">Rock</label>
+    </span>
     
     <span>
-<input id="paper-choice" name="choices" type="radio" value="0" >
-<label for="paper-choice">Paper</label>
-</span>
+        <input id="paper-choice"
+               name="choices"
+               type="radio"
+               value="0">
+        <label for="paper-choice">Paper</label>
+    </span>
     
     <span>
-<input id="scissors-choice" name="choices" type="radio" value="1" >
-<label for="scissors-choice">Scissors</label>
-</span>
+        <input id="scissors-choice"
+               name="choices"
+               type="radio"
+               value="1">
+        <label for="scissors-choice">Scissors</label>
+    </span>
         <button id="done-with-choice">Submit My Choice</button>
-        <button id="quit">Quit</button>
-    
-    
-    <!---->
-    <!--<input type="radio" name="gender" value="male"> Male<br>-->
-    <!--<input type="radio" name="gender" value="female"> Female<br>-->
-    <!--<input type="radio" name="gender" value="other"> Other-->
-    <!--<button class="choice" id="rock-choice">Rock</button>-->
-    <!--<button class="choice" id="paper-choice">Paper</button>-->
-    <!--<button class="choice" id="scissors-choice">Scissors</button>-->
 </div>
+
+<button id="quit">Quit</button>
 
 <div id="results"></div>
 

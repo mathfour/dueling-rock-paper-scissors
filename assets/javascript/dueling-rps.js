@@ -7,10 +7,10 @@ var playerOneChoice;
 var playerTwoChoice;
 var playerOneName;
 var playerTwoName;
-var userName = "";
-var whoIAm = 0;
-var thisUser = "";
+var thisUsersNameIsX = "";
+var thisIsPlayerNumberX = 0;
 
+// bmc: todo create chat (shouldn't be terribly hard, right?)
 
 var configThisAlready = {
     apiKey: "AIzaSyCNyA8ecM-65kxrfuwxxMQr1f0Ujoasr7I",
@@ -22,21 +22,22 @@ var configThisAlready = {
 firebase.initializeApp(configThisAlready);
 
 // Create a variable to reference the database
-var uberDatabase = firebase.database();
+var theDatabase = firebase.database();
 
-var useThisDatabase = uberDatabase.ref();
+// bmc: variable so I don't have to keep writing "ref" for the whole thing
+var dbRef = theDatabase.ref();
 
 
 
 $("#play").on("click", function(e){
     e.preventDefault();
-    userName = $("#userName").val();
+    thisUsersNameIsX = $("#userNameInput").val();
 
-    useThisDatabase.once('value').then(function(snapshot){
+    dbRef.once('value').then(function(snapshot){
+        // bmc: looking to see if there are players around (i.e. logged in and playing)
+        areThereAnyPlayersInGame = snapshot.val();
 
-        playersAround = snapshot.val();
-
-        if (!playersAround){
+        if (!areThereAnyPlayersInGame){
             // bmc: create player 1
             console.log("there is no player 1");
             addPlayer(1);
@@ -64,40 +65,46 @@ $("#play").on("click", function(e){
 
     });
 
-    thisUser = uberDatabase.ref("players").child(whoIAm);
-    console.log("thisUser", thisUser);
-    // var playersActive = uberDatabase.ref("players");
-    // playersActive.on("value", function (snapshot) {
-    //     console.log(snapshot.val());
-    // });
-
-
-    // var firstPlayer = uberDatabase.ref("players").child("1");
-    // firstPlayer.on("value", function(snapshot) {
-    //     console.log(snapshot.val());
-    //     console.log(snapshot.val().userName); // bmc: this is the name of player
-    // });
-
-
-    // logThis = useThisDatabase.thisUserID;
-    // console.log("useThisDatabase.val().thisUserID.wins", logThis);
-
     $(".name-input").css("display", "none");
-    $("#theGame").css("display", "inline");
-    $("#greeting").text("Hi there, " + userName + "!");
+    $("#greeting").text("Hi there, " + thisUsersNameIsX + "!");
 });
+
+// bmc: todo move the winner logic to right after the 2nd player chooses
+
+// bmc: turn taking
+
+// bmc: todo show choices to playerOne and wait for him to choose
+
+// bmc: todo send choice to firebase
+
+// bmc: todo dbRef.on("child added" with params) <- will indicate that playerOne has entered his choice and it's playerTwo's turn
+
+// bmc: show choices to playerTwo and wait for him to choose
+
+// bmc: send choice to firebase
+
+// bmc: dbRef.on("child added" with params) <- will indicate that playerTwo has entered his choice and we can determine the winner
+
+function takeTurn(playerNum) {
+    // bmc: $("#id-for-info-for-the it's your turn thing").text("It's player"+ playerNum + "'s turn");
+    $("#player-x-turn").html("It's player " + playerNum + "'s turn!");
+    if (playerNum === thisIsPlayerNumberX){
+        $("#theGame").css("display", "inline");
+    }
+    // bmc: LEFT OFF HERE LEFT OFF HERE todo LEFT OFF HERE
+}
 
 $("#done-with-choice").on("click", function(e){
     e.preventDefault();
     var choiceList = ["paper", "scissors", "rock"];
     var choice = $("input[name='choices']:checked").val();
 
-    // bmc: append the user whoIAm with the value
-    uberDatabase.ref("players").child(whoIAm).update({
+    // bmc: append the user thisIsPlayerNumberX with the value
+    theDatabase.ref("players").child(thisIsPlayerNumberX).update({
         choice: choice
     });
 
-    useThisDatabase.on('value', function(snapshot){
+    dbRef.on('value', function(snapshot){
         playerOneChoice = snapshot.val().players["1"].choice;
         playerTwoChoice = snapshot.val().players["2"].choice;
 
@@ -106,9 +113,6 @@ $("#done-with-choice").on("click", function(e){
 
     });
 
-    // var compChoice = Math.round(Math.random()*10) % 3;
-
-    // var compChoiceA =
     console.log("2 is rock, 0 is paper and 1 is scissors:", choice);
 
     // bmc: on competitor choice, access it and then do arithmetic
@@ -136,46 +140,26 @@ $("#done-with-choice").on("click", function(e){
 });
 
 
-
-function addPlayer(number) {
-    addPlayerHere = uberDatabase.ref("players").child(number);
-
-    addPlayerHere.set({
-        userName: userName,
-        wins: 0,
-        losses: 0
-    });
-    whoIAm = number;
-    $("#you-are-player").html("You are player " + whoIAm);
-}
-
-
-// $(window).unload(function () {
-//     // bmc: delete that user
-//     uberDatabase.ref("players").child(whoIAm);
-// });
-
-// window.onbeforeunload = function() {
-//     uberDatabase.ref("players").child(whoIAm);
-// };
-
-// window.onbeforeunload = function () {
-//     alert("Do you really want to close?");
-// };
-
-console.log("whoIAm is ", whoIAm);
-
-// useThisDatabase.onDisconnect().remove();
-
+// bmc: this gives us the quit button functionality; it works the same as if the user closed the browser
 $("#quit").on("click", function(e) {
     e.preventDefault();
     deleteUser();
 });
 
+// bmc: This adds a player and labels him in the database as playerNumberX
+function addPlayer(playerNumberX) {
+    addPlayerHere = theDatabase.ref("players").child(playerNumberX);
 
+    addPlayerHere.set({
+        userName: thisUsersNameIsX,
+        wins: 0,
+        losses: 0
+    });
+    thisIsPlayerNumberX = playerNumberX;
+    $("#you-are-player").html("You are player " + thisIsPlayerNumberX);
+}
+
+// bmc: This deletes the user that is registered
 function deleteUser() {
-    console.log("trying to delete user");
-    console.log("whoIAm is ", whoIAm);
-
-    uberDatabase.ref("players").child(whoIAm).remove();
+    theDatabase.ref("players").child(thisIsPlayerNumberX).remove();
 }
