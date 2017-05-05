@@ -2,15 +2,10 @@
  * Created by SilverDash on 5/3/17.
  */
 
-
-var playerOneChoice;
-var playerTwoChoice;
-var playerOneName;
-var playerTwoName;
-var thisUsersNameIsX = "";
-var thisIsPlayerNumberX = 0;
-
 // bmc: todo create chat (shouldn't be terribly hard, right?)
+// bmc: todo prevent players from clicking choice until they are both logged in
+// bmc: todo let both players know who won and what the other picked
+// bmc: todo tally the winner and loser
 
 var configThisAlready = {
     apiKey: "AIzaSyCNyA8ecM-65kxrfuwxxMQr1f0Ujoasr7I",
@@ -21,13 +16,18 @@ var configThisAlready = {
 
 firebase.initializeApp(configThisAlready);
 
-// Create a variable to reference the database
 var theDatabase = firebase.database();
-
-// bmc: variable so I don't have to keep writing "ref" for the whole thing
 var dbRef = theDatabase.ref();
+var playerOneRef = dbRef.child("players").child("1").child("choice");
+var playerTwoRef = dbRef.child("players").child("2").child("choice");
 
-
+var choiceList = ["paper","scissors","rock"];
+var playerOneChoice = 17;
+var playerTwoChoice = 17;
+var playerOneName;
+var playerTwoName;
+var thisUsersNameIsX = "";
+var thisIsPlayerNumberX = 0;
 
 $("#play").on("click", function(e){
     e.preventDefault();
@@ -65,40 +65,29 @@ $("#play").on("click", function(e){
 
     });
 
+    $("#theGame").css("display", "inline");
     $(".name-input").css("display", "none");
     $("#greeting").text("Hi there, " + thisUsersNameIsX + "!");
 });
 
-// bmc: todo move the winner logic to right after the 2nd player chooses
-
-// bmc: turn taking
-
-// bmc: todo show choices to playerOne and wait for him to choose
-
-// bmc: todo send choice to firebase
-
-// bmc: todo dbRef.on("child added" with params) <- will indicate that playerOne has entered his choice and it's playerTwo's turn
-
-// bmc: show choices to playerTwo and wait for him to choose
-
-// bmc: send choice to firebase
-
-// bmc: dbRef.on("child added" with params) <- will indicate that playerTwo has entered his choice and we can determine the winner
-
-function takeTurn(playerNum) {
-    // bmc: $("#id-for-info-for-the it's your turn thing").text("It's player"+ playerNum + "'s turn");
-    $("#player-x-turn").html("It's player " + playerNum + "'s turn!");
-    if (playerNum === thisIsPlayerNumberX){
-        $("#theGame").css("display", "inline");
+playerOneRef.on("value", function (snapshot) {
+    if (snapshot.val() != 17 && snapshot.val() != null){
+        playerOneChoice = snapshot.val();
+        console.log("player one picked " + snapshot.val());
     }
-    // bmc: LEFT OFF HERE LEFT OFF HERE todo LEFT OFF HERE
-}
+});
+
+playerTwoRef.on("value", function (snapshot) {
+    if (snapshot.val() != 17 && snapshot.val() != null){
+        playerTwoChoice = snapshot.val();
+        console.log("player two picked " + snapshot.val());
+    }
+});
 
 $("#done-with-choice").on("click", function(e){
     e.preventDefault();
-    var choiceList = ["paper", "scissors", "rock"];
-    var choice = $("input[name='choices']:checked").val();
 
+    var choice = $("input[name='choices']:checked").val();
     // bmc: append the user thisIsPlayerNumberX with the value
     theDatabase.ref("players").child(thisIsPlayerNumberX).update({
         choice: choice
@@ -113,10 +102,37 @@ $("#done-with-choice").on("click", function(e){
 
     });
 
-    console.log("2 is rock, 0 is paper and 1 is scissors:", choice);
+    if (playerOneChoice != 17 && playerTwoChoice != 17) {
+        pickTheWinner();
+    }
+});
 
-    // bmc: on competitor choice, access it and then do arithmetic
-    // var winDif = choice - compChoice;
+// bmc: this gives us the quit button functionality; it works the same as if the user closed the browser
+$("#quit").on("click", function(e) {
+    e.preventDefault();
+    deleteUser();
+});
+
+// bmc: This adds a player and labels him in the database as playerNumberX
+function addPlayer(playerNumberX) {
+    addPlayerHere = theDatabase.ref("players").child(playerNumberX);
+
+    addPlayerHere.set({
+        userName: thisUsersNameIsX,
+        wins: 0,
+        losses: 0,
+        choice: 17
+    });
+    thisIsPlayerNumberX = playerNumberX;
+    $("#you-are-player").html("You are player " + thisIsPlayerNumberX);
+}
+
+// bmc: This deletes the user that is registered
+function deleteUser() {
+    theDatabase.ref("players").child(thisIsPlayerNumberX).remove();
+}
+
+function pickTheWinner() {
     var winDif = playerOneChoice - playerTwoChoice;
 
     if (winDif === 1 || winDif === -2) {
@@ -136,30 +152,9 @@ $("#done-with-choice").on("click", function(e){
         console.log("Hey, you tied!");
         $("results").html("Player 1 picked " + choiceList[playerOneChoice] + ". <br>Player 2 picked " + choiceList[playerTwoChoice] + ". <br>It's a tie!");
     }
-
-});
-
-
-// bmc: this gives us the quit button functionality; it works the same as if the user closed the browser
-$("#quit").on("click", function(e) {
-    e.preventDefault();
-    deleteUser();
-});
-
-// bmc: This adds a player and labels him in the database as playerNumberX
-function addPlayer(playerNumberX) {
-    addPlayerHere = theDatabase.ref("players").child(playerNumberX);
-
-    addPlayerHere.set({
-        userName: thisUsersNameIsX,
-        wins: 0,
-        losses: 0
-    });
-    thisIsPlayerNumberX = playerNumberX;
-    $("#you-are-player").html("You are player " + thisIsPlayerNumberX);
 }
 
-// bmc: This deletes the user that is registered
-function deleteUser() {
-    theDatabase.ref("players").child(thisIsPlayerNumberX).remove();
+function tally(winner, loser) {
+    // bmc: update winner in firebase with +1
+    // bmc: update loser in firebase with +1
 }
