@@ -32,7 +32,7 @@
 </head>
 <body onunload="deleteUser();"
       onbeforeunload="deleteUser();">
-
+<div class="titleStuff">
 <h1>Rock Paper Scissors</h1>
 
 <input type="text"
@@ -45,41 +45,75 @@
 
 <div id="greeting"></div>
 <div id="you-are-player"></div>
+
+    <button id="quit">Quit</button>
+
 <div id="player-x-turn"></div>
 <div id="playerOneRPS"></div>
-
-<div id="theGame">
-    Choose Rock, Paper or Scissors...
+</div>
+<div id="player1" class="playerX">
+    Go ahead, <span class="just-the-name"></span>,
+    <br>
+        Choose Rock, Paper or Scissors...
     <br>
     <span>
-        <input id="rock-choice"
+        <input id="rock-choice1"
                name="choices"
                type="radio"
                value="2">
-        <label for="rock-choice">Rock</label>
+        <label for="rock-choice1">Rock</label>
     </span>
     
     <span>
-        <input id="paper-choice"
+        <input id="paper-choice1"
                name="choices"
                type="radio"
                value="0">
-        <label for="paper-choice">Paper</label>
+        <label for="paper-choice1">Paper</label>
     </span>
     
     <span>
-        <input id="scissors-choice"
+        <input id="scissors-choice1"
                name="choices"
                type="radio"
                value="1">
-        <label for="scissors-choice">Scissors</label>
+        <label for="scissors-choice1">Scissors</label>
     </span>
-        <button id="done-with-choice">Submit My Choice</button>
+        <button id="done-with-choice1">Submit My Choice</button>
 </div>
 
-<button id="quit">Quit</button>
+<div id="player2" class="playerX">
+    Go ahead, <span class="just-the-name"></span>,
+    <br>
+    Choose Rock, Paper or Scissors...
+    <br>
+    <span>
+        <input id="rock-choice2"
+               name="choices"
+               type="radio"
+               value="2">
+        <label for="rock-choice2">Rock</label>
+    </span>
+    
+    <span>
+        <input id="paper-choice2"
+               name="choices"
+               type="radio"
+               value="0">
+        <label for="paper-choice2">Paper</label>
+    </span>
+    
+    <span>
+        <input id="scissors-choice2"
+               name="choices"
+               type="radio"
+               value="1">
+        <label for="scissors-choice2">Scissors</label>
+    </span>
+    <button id="done-with-choice2">Submit My Choice</button>
+</div>
 
-<div id="results"></div>
+
 
 
 <script src="assets/javascript/dueling-rps.js"></script>
