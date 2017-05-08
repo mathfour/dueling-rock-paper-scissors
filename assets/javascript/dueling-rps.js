@@ -46,8 +46,14 @@ var playerTwoName;
 var thisUsersNameIsX = "";
 var thisIsPlayerNumberX = 0;
 
+var playerOneWins = 0;
+var playerOneLosses = 0;
+var playerTwoWins = 0;
+var playerTwoLosses = 0;
+
 // $("#player1").prop("display", "none");
 // $("#player2").prop("display", "none");
+
 
 // bmc: User inputs name and clicks Play Button
 // bmc: This assigns the player a player number
@@ -65,8 +71,8 @@ $("#play").on("click", function (e) {
             // bmc: create player 1
             console.log("There are no players, so you get to be player 1.");
             addPlayer(1);
-            $("#you-are-player").html("<h2>There are no players, so you get to be player 1. You" +
-                    " might have to wait to see Player 2 show up.</h2>");
+            // $("#you-are-player").html("<h2>There are no players, so you get to be player 1. You" +
+            //         " might have to wait to see Player 2 show up.</h2>");
             thisIsPlayerNumberX = 1;
             // showGamePlay(1);
             // disableGamePlay();
@@ -79,7 +85,7 @@ $("#play").on("click", function (e) {
                 // bmc: create player 1
                 console.log("Player 2 is in the house. You can be player 1.");
                 addPlayer(1);
-                $("#you-are-player").html("Player 2 is already in the house. You are player 1.");
+                // $("#you-are-player").html("Player 2 is already in the house. You are player 1.");
                 thisIsPlayerNumberX = 1;
                 // showGamePlay(1);
                 // enableGamePlay();
@@ -88,8 +94,8 @@ $("#play").on("click", function (e) {
                 // bmc: create player 2
                 console.log("Player 1 is in the house. You can be player 2.");
                 addPlayer(2);
-                $("#you-are-player").html("<h2>Player 1 is already in the house. You are player" +
-                        " 2.<br>Click your choice under your player number only!</h2>");
+                // $("#you-are-player").html("<h2>Player 1 is already in the house. You are player" +
+                //         " 2.<br>Click your choice under your player number only!</h2>");
                 thisIsPlayerNumberX = 2;
                 // showGamePlay(2);
                 // enableGamePlay();
@@ -122,8 +128,6 @@ $("#done-with-choice1").on("click", function (e) {
         choice: choice
     });
     if (playerOneChoice != 17 && playerTwoChoice != 17) {
-        $("#playerOneRPS").html("<h2>Player 1 picked" + playerOneChoice + "</h2>");
-        $("#playerTwoRPS").html("<h2>Player 2 picked" + playerTwoChoice + "</h2>");
         pickTheWinner();
     }
 });
@@ -164,11 +168,11 @@ playerTwoChoiceRef.on("value", function (snapshot) {
 // bmc: this gives us the quit button functionality; it works the same as if the user closed the browser
 $("#quit").on("click", function (e) {
     e.preventDefault();
-    deleteUser();
     $("#you-are-player").html("");
     $("#click-when-ready").html("");
     $("#greeting").text("See ya!");
     $(".just-the-name").text("");
+    deleteUser();
 });
 
 // bmc: This adds a player and labels him in the database as playerNumberX
@@ -188,7 +192,7 @@ function addPlayer(playerNumberX) {
 // bmc: This deletes the user that is registered
 function deleteUser() {
     playersRef.child(thisIsPlayerNumberX).remove();
-    disableGamePlay();
+    // disableGamePlay();
 }
 
 function pickTheWinner() {
@@ -198,14 +202,14 @@ function pickTheWinner() {
         console.log("You win!");
         // bmc: player one wins
         $("results").html("Player 1 picked " + choiceList[playerOneChoice] + ". <br>Player 2 picked " + choiceList[playerTwoChoice] + ". <br>" + playerOneName + " is the winner!");
-        winner(1);
+        playerOneIsTheWinner();
     }
 
     else if (winDif === -1 || winDif === 2) {
         console.log("You lose!");
         // bmc: player two wins
         $("results").html("Player 1 picked " + choiceList[playerOneChoice] + ". <br>Player 2 picked " + choiceList[playerTwoChoice] + ". <br>" + playerTwoName + " is the winner!");
-        winner(2);
+        playerTwoIsTheWinner();
     }
 
     else {
@@ -215,38 +219,6 @@ function pickTheWinner() {
     }
 }
 
-
-// bmc: tally(number of player that won, number of player that lost)
-function winner(player) {
-    // bmc: update winner in firebase with +1
-    // bmc: update loser in firebase with +1
-    if (player = 1) {
-
-        $("#winnner-loser").html("Player 1 Wins, Player 2 Loses.");
-
-        playerOneWinsRef.once("value").then(function (snapshot) {
-            playerOneWins = snapshot.val().wins + 1;
-        });
-
-        playerTwoLossesRef.once("value").then(function (snapshot) {
-            playerTwoLosses = snapshot.val().losses + 1;
-        });
-    }
-    if(player = 2) {
-
-        $("#winnner-loser").html("Player 2 Wins, Player 1 Loses.");
-
-        playerTwoWinsRef.once("value").then(function (snapshot) {
-            playerTwoWins = snapshot.val().wins + 1;
-        });
-
-        playerOneLossesRef.once("value").then(function (snapshot) {
-            playerOneLosses = snapshot.val().losses + 1;
-        });
-    }
-
-
-}
 
 // function showGamePlay(player) {
 //     if (player === 1) {
@@ -269,11 +241,11 @@ function winner(player) {
 //     $("#done-with-choice2").prop("disabled", true);
 // }
 
-playerTwoRef.on("child_added", function (snapshot) {
-    $(".done-with-choice2").prop("disabled", false);
-    $("#you-are-player").html('<h2>They\'re here! Click your choice under your player' +
-            ' number only!</h2>');
-});
+// playerTwoRef.on("child_added", function (snapshot) {
+//     // $(".done-with-choice2").prop("disabled", false);
+//     $("#you-are-player").html('<h2>They\'re here! Click your choice under your player' +
+//             ' number only!</h2>');
+// });
 
 // $(".player-2-ready").on("click", function (e) {
 //     e.preventDefault();
@@ -281,3 +253,97 @@ playerTwoRef.on("child_added", function (snapshot) {
 // });
 
 // $("#test-bit").text("test bit");
+
+
+// bmc: tally(number of player that won, number of player that lost)
+function playerOneIsTheWinner() {
+
+    playerOneWins++;
+    playerTwoLosses++;
+
+    playerOneRef.update({
+        wins: playerOneWins
+    });
+
+     playerTwoRef.update({
+        losses: playerTwoLosses
+    });
+
+}
+
+function playerTwoIsTheWinner() {
+    playerTwoWins++;
+    playerOneLosses++;
+
+    playerTwoRef.update({
+        wins: playerTwoWins
+    });
+
+    playerOneRef.update({
+        losses: playerOneLosses
+    });
+}
+
+playerOneRef.on("value",function(snapshot){
+    // choiceWord = choiceList[snapshot.val().choice];
+    // $("#playerOneRPS").html("Player 2 picked " + choiceWord);
+
+    $("#player-1-wins").html("Wins: " + snapshot.val().wins);
+    $("#player-1-losses").html("Losses: " + snapshot.val().losses);
+
+    $("#you-are-player").html("<h2>Player 1 is ready to play!</h2>");
+
+    playerOneWins = snapshot.val().wins;
+    playerOneLosses = snapshot.val().losses;
+
+}, function(screwUp) {
+    console.log("Arg! The read failed: " + screwUp.code);
+});
+
+playerTwoRef.on("value",function(snapshot){
+    // choiceWord = choiceList[snapshot.val().choice];
+    // $("#playerTwoRPS").html("Player 1 picked " + choiceWord);
+
+    $("#player-2-wins").html("Wins: " + snapshot.val().wins);
+    $("#player-2-losses").html("Losses: " + snapshot.val().losses);
+
+    $("#you-are-player").html("<h2>Player 2 is ready to play!</h2>");
+
+    playerTwoWins = snapshot.val().wins;
+    playerTwoLosses = snapshot.val().losses;
+
+}, function(screwUp) {
+    console.log("Arg! The read failed: " + screwUp.code);
+});
+
+$("#chat-send").on("click", function() {
+    // Don't refresh the page!
+    event.preventDefault();
+
+    // YOUR TASK!!!
+    // Code in the logic for storing and retrieving the most recent user.
+    // Don't forget to provide initial data to your Firebase database.
+    chatLine = $("#chat").val().trim();
+
+    dbRef.push({
+        words: chatLine,
+    });
+
+});
+
+// Firebase watcher + initial loader HINT: .on("value")
+dbRef.on("value", function(snapshot) {
+
+    // Log everything that's coming out of snapshot
+    console.log(snapshot.val());
+    console.log(snapshot.val().words);
+
+
+    // Change the HTML to reflect
+    $("#chat-area").html(snapshot.val().words);
+
+
+    // Handle the errors
+}, function(errorObject) {
+    console.log("Errors handled: " + errorObject.code);
+});

@@ -3,7 +3,11 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-#greeting {
+#greeting,
+player-1-losses,
+player-2-losses,
+player-1-wins,
+player-2-wins {
     font-size: 2em;
 }
 
@@ -49,6 +53,23 @@ body {
 /*.submit-choice {*/
 /*disabled: true;*/
 /*}*/
+
+#chat-area {
+    clear: both;
+    float: left;
+    margin-left: 5%;
+    width: 33%;
+    border: solid;
+    margin-top: 20px;
+    height: 250px;
+}
+
+#chat, #chat-send{
+    clear: both;
+    float: left;
+    margin-left: 5%;
+    width: 33%;
+}
 
 span {
     /* style this span element so we can display nicely, this stlying is not neccessary */
