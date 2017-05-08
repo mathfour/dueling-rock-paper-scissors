@@ -33,29 +33,35 @@
 <body onunload="deleteUser();"
       onbeforeunload="deleteUser();">
 <div class="titleStuff">
-<h1>Rock Paper Scissors</h1>
-
-<input type="text"
-       id="userNameInput"
-       class="name-input">
-<br>
-<button id="play"
-        class="name-input">Play
-</button>
-
-<div id="greeting"></div>
-<div id="you-are-player"></div>
-
+    <h1>Rock Paper Scissors</h1>
+    
+    <input type="text"
+           id="userNameInput"
+           class="name-input">
+    <br>
+    <button id="play"
+            class="name-input">Play
+    </button>
+    
+    <div id="greeting"></div>
+    <div id="you-are-player"></div>
+    
     <button id="quit">Quit</button>
-
-<div id="player-x-turn"></div>
-<div id="playerOneRPS"></div>
+    
+    <div id="test-bit"></div>
+    
+    <div id="click-when-ready"></div>
+    
+    <div id="winnner-loser"></div>
+    <div id="playerOneRPS"></div>
+    <div id="playerTwoRPS"></div>
 </div>
-<div id="player1" class="playerX">
-    Go ahead, <span class="just-the-name"></span>,
-    <br>
-        Choose Rock, Paper or Scissors...
-    <br>
+<div id="player1"
+     class="playerX">
+    <!--<p>Go ahead,</p>-->
+    <!--<span class="just-the-name"></span>,-->
+    <h1>Player 1</h1>
+    <p>Choose Rock, Paper or Scissors...</p>
     <span>
         <input id="rock-choice1"
                name="choices"
@@ -79,14 +85,19 @@
                value="1">
         <label for="scissors-choice1">Scissors</label>
     </span>
-        <button id="done-with-choice1">Submit My Choice</button>
+    <button class="submit-choice"
+            id="done-with-choice1">Submit My Choice
+    </button>
 </div>
 
-<div id="player2" class="playerX">
-    Go ahead, <span class="just-the-name"></span>,
-    <br>
-    Choose Rock, Paper or Scissors...
-    <br>
+<div id="player2"
+     class="playerX">
+    <!--<br>-->
+    <!--<p>Go ahead,</p>-->
+    <!--<span class="just-the-name"></span>,-->
+    <h1>Player 2</h1>
+    <p>Choose Rock, Paper or Scissors...</p>
+
     <span>
         <input id="rock-choice2"
                name="choices"
@@ -112,9 +123,6 @@
     </span>
     <button id="done-with-choice2">Submit My Choice</button>
 </div>
-
-
-
 
 <script src="assets/javascript/dueling-rps.js"></script>
 </body>

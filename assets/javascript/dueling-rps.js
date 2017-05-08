@@ -17,7 +17,7 @@ var configThisAlready = {
 firebase.initializeApp(configThisAlready);
 
 var theDatabase = firebase.database();
-var dbRef = theDatabase.ref()
+var dbRef = theDatabase.ref();
 var playersRef = theDatabase.ref("players");
 
 
@@ -30,14 +30,13 @@ var playerOneWinsRef = playerOneRef.child("wins");
 var playerOneLossesRef = playerOneRef.child("losses");
 
 
-
 var playerTwoChoiceRef = playerTwoRef.child("choice");
 var playerTwoWinsRef = playerTwoRef.child("wins");
 var playerTwoLossesRef = playerTwoRef.child("losses");
 
 
+var choiceList = ["paper", "scissors", "rock"];
 
-var choiceList = ["paper","scissors","rock"];
 var playerOneChoice = 17;
 var playerOneName;
 
@@ -47,24 +46,30 @@ var playerTwoName;
 var thisUsersNameIsX = "";
 var thisIsPlayerNumberX = 0;
 
+// $("#player1").prop("display", "none");
+// $("#player2").prop("display", "none");
+
 // bmc: User inputs name and clicks Play Button
 // bmc: This assigns the player a player number
-$("#play").on("click", function(e){
+$("#play").on("click", function (e) {
     e.preventDefault();
 
     // bmc: variable for the user
     thisUsersNameIsX = $("#userNameInput").val();
 
     // bmc: looking to see if there are players around (i.e. logged in and playing) so user can play (or be rejected)
-    dbRef.once('value').then(function(snapshot){
+    dbRef.once('value').then(function (snapshot) {
         areThereAnyPlayersInGame = snapshot.val();
 
-        if (!areThereAnyPlayersInGame){
+        if (!areThereAnyPlayersInGame) {
             // bmc: create player 1
             console.log("There are no players, so you get to be player 1.");
             addPlayer(1);
+            $("#you-are-player").html("<h2>There are no players, so you get to be player 1. You" +
+                    " might have to wait to see Player 2 show up.</h2>");
             thisIsPlayerNumberX = 1;
-            showGamePlay(1);
+            // showGamePlay(1);
+            // disableGamePlay();
         }
         else {
             playerOne = snapshot.val().players["1"];
@@ -74,17 +79,21 @@ $("#play").on("click", function(e){
                 // bmc: create player 1
                 console.log("Player 2 is in the house. You can be player 1.");
                 addPlayer(1);
-                $("#you-are-player").html("Player 2 is in the house. You can be player 1.");
+                $("#you-are-player").html("Player 2 is already in the house. You are player 1.");
                 thisIsPlayerNumberX = 1;
-                showGamePlay(1);
+                // showGamePlay(1);
+                // enableGamePlay();
             }
             else if (!playerTwo) {
                 // bmc: create player 2
                 console.log("Player 1 is in the house. You can be player 2.");
                 addPlayer(2);
-                $("#you-are-player").html("Player 1 is in the house. You can be player 2.");
+                $("#you-are-player").html("<h2>Player 1 is already in the house. You are player" +
+                        " 2.<br>Click your choice under your player number only!</h2>");
                 thisIsPlayerNumberX = 2;
-                showGamePlay(2);
+                // showGamePlay(2);
+                // enableGamePlay();
+
             }
             else {
                 // bmc: display "You can't play now"
@@ -98,11 +107,11 @@ $("#play").on("click", function(e){
     $("#theGame").css("display", "block");
     $(".name-input").css("display", "none");
     $("#greeting").text("Hi there, " + thisUsersNameIsX + "!");
-    $(".just-the-name").text(thisUsersNameIsX);
+    // $(".just-the-name").text(thisUsersNameIsX);
 });
 
 // bmc: Player X finalizes choice with click
-$("#done-with-choice1").on("click", function(e){
+$("#done-with-choice1").on("click", function (e) {
     e.preventDefault();
 
     // bmc: set variable "choice" to be the choice user checked
@@ -113,11 +122,13 @@ $("#done-with-choice1").on("click", function(e){
         choice: choice
     });
     if (playerOneChoice != 17 && playerTwoChoice != 17) {
+        $("#playerOneRPS").html("<h2>Player 1 picked" + playerOneChoice + "</h2>");
+        $("#playerTwoRPS").html("<h2>Player 2 picked" + playerTwoChoice + "</h2>");
         pickTheWinner();
     }
 });
 
-$("#done-with-choice2").on("click", function(e){
+$("#done-with-choice2").on("click", function (e) {
     e.preventDefault();
 
     // bmc: set variable "choice" to be the choice user checked
@@ -135,7 +146,7 @@ $("#done-with-choice2").on("click", function(e){
 
 // bmc: when player 1 finalizes choice, set playerOneChoice to the choice
 playerOneChoiceRef.on("value", function (snapshot) {
-    if (snapshot.val() != 17 && snapshot.val() != null){
+    if (snapshot.val() != 17 && snapshot.val() != null) {
         playerOneChoice = snapshot.val();
         console.log("player one picked " + snapshot.val());
     }
@@ -143,7 +154,7 @@ playerOneChoiceRef.on("value", function (snapshot) {
 
 // bmc: when player 2 finalizes choice, set playerTwoChoice to the choice
 playerTwoChoiceRef.on("value", function (snapshot) {
-    if (snapshot.val() != 17 && snapshot.val() != null){
+    if (snapshot.val() != 17 && snapshot.val() != null) {
         playerTwoChoice = snapshot.val();
         console.log("player two picked " + snapshot.val());
     }
@@ -151,9 +162,13 @@ playerTwoChoiceRef.on("value", function (snapshot) {
 
 
 // bmc: this gives us the quit button functionality; it works the same as if the user closed the browser
-$("#quit").on("click", function(e) {
+$("#quit").on("click", function (e) {
     e.preventDefault();
     deleteUser();
+    $("#you-are-player").html("");
+    $("#click-when-ready").html("");
+    $("#greeting").text("See ya!");
+    $(".just-the-name").text("");
 });
 
 // bmc: This adds a player and labels him in the database as playerNumberX
@@ -173,6 +188,7 @@ function addPlayer(playerNumberX) {
 // bmc: This deletes the user that is registered
 function deleteUser() {
     playersRef.child(thisIsPlayerNumberX).remove();
+    disableGamePlay();
 }
 
 function pickTheWinner() {
@@ -204,29 +220,64 @@ function pickTheWinner() {
 function winner(player) {
     // bmc: update winner in firebase with +1
     // bmc: update loser in firebase with +1
-    if (player = 1){
-        playerOneWinsRef.once("value").then (function (snapshot) {
+    if (player = 1) {
+
+        $("#winnner-loser").html("Player 1 Wins, Player 2 Loses.");
+
+        playerOneWinsRef.once("value").then(function (snapshot) {
             playerOneWins = snapshot.val().wins + 1;
         });
 
-        playerTwoLossesRef.once("value").then (function(snapshot){
+        playerTwoLossesRef.once("value").then(function (snapshot) {
             playerTwoLosses = snapshot.val().losses + 1;
         });
     }
-    else {
-        playerTwoWinsRef.once("value").then (function (snapshot) {
+    if(player = 2) {
+
+        $("#winnner-loser").html("Player 2 Wins, Player 1 Loses.");
+
+        playerTwoWinsRef.once("value").then(function (snapshot) {
             playerTwoWins = snapshot.val().wins + 1;
         });
 
-        playerOneLossesRef.once("value").then (function(snapshot){
+        playerOneLossesRef.once("value").then(function (snapshot) {
             playerOneLosses = snapshot.val().losses + 1;
         });
-       }
+    }
 
 
 }
 
-function showGamePlay(player) {
-    idToChange = "#player" + player;
-    $(idToChange).css("display", "block");
-}
+// function showGamePlay(player) {
+//     if (player === 1) {
+//         $("#player1").css("display", "block");
+//     }
+//     if (player === 2) {
+//         $("#player2").css("display", "block");
+//     }
+// }
+
+// function enableGamePlay() {
+//     $("input[name='choices']").prop("disabled", false);
+//     $(".done-with-choice1").prop("disabled", false);
+//     $(".done-with-choice2").prop("disabled", false);
+// }
+
+// function disableGamePlay() {
+//     $("input[name='choices']").prop("disabled", true);
+//     $("#done-with-choice1").prop("disabled", true);
+//     $("#done-with-choice2").prop("disabled", true);
+// }
+
+playerTwoRef.on("child_added", function (snapshot) {
+    $(".done-with-choice2").prop("disabled", false);
+    $("#you-are-player").html('<h2>They\'re here! Click your choice under your player' +
+            ' number only!</h2>');
+});
+
+// $(".player-2-ready").on("click", function (e) {
+//     e.preventDefault();
+//     $("#test-bit").text("it was clicked");
+// });
+
+// $("#test-bit").text("test bit");
